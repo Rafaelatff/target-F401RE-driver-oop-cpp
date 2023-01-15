@@ -215,4 +215,38 @@ Results:
 
 ![image](https://user-images.githubusercontent.com/58916022/212558899-82b981bf-b3b1-4b30-9584-9c6ee15fdc1b.png)
 
-## Systick
+## SysTick
+
+We create a class for our SysTick:
+
+```cpp
+class SYSTICK{
+	public:
+		SYSTICK(); // constructor
+		void SysTick_delay(uint32_t sec);
+		void SysTick_delay_ms(uint32_t msec);
+};
+```
+
+The driver:
+```cpp
+SYSTICK::SYSTICK(){
+	//empty
+}
+
+void SYSTICK::SysTick_delay(uint32_t sec){
+	// function here, same in .c file
+}
+
+void SYSTICK::SysTick_delay_ms(uint32_t msec){
+	// function here, same in .c file
+}
+```
+
+Then in main.cpp, we call:
+
+```cpp
+	SYSTICK delayTimer;
+	delayTimer.SysTick_delay(5); //5 seconds delay
+```
+
