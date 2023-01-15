@@ -11,7 +11,13 @@ The source files main.cpp and gpio.cpp were created, together with the gpio.h fi
 
 ![image](https://user-images.githubusercontent.com/58916022/212551225-96afecb5-f096-4334-8722-95210676663b.png)
 
-# coding
+**Important: now the STM32Cube just compile right after I changed the driver folder name to 'drivers'.**
+
+![image](https://user-images.githubusercontent.com/58916022/212556335-d83df1f9-2cdf-42d2-9653-486915b74c11.png)
+
+## gpio
+
+#### header file
 
 We started by creating a class element with the name GPIO:
 
@@ -52,7 +58,7 @@ typedef enum{
 
 For the public functions, we declared a function with same name of the class to be our constructor GPIO::GPIO.
 
-# cpp code
+#### Source file:
 
 In the source file, we started by coding the constructor function. We basically used the same code created for GPIO during the *C* classes but add the switch case function to call the functions that enable the port clock.
 
@@ -144,3 +150,46 @@ To:
 ```cpp
 void GPIO::__LIB_RCC_GPIOA_CLK_ENABLE()const{ RCC->AHB1ENR |= GPIOA_EN;}
 ```
+
+
+We created a function to config the GPIO pin parameters (nothing new to C++, just ordinary C: 
+
+```cpp
+GPIO_InitTypeDef __gpio_pin_params(pinDataType _Pin, pinDataType _Mode, pinDataType _Pull){
+	
+	GPIO_InitTypeDef pinGPIO_InitStruct;
+	pinGPIO_InitStruct.Mode = _Mode;
+	pinGPIO_InitStruct.Pin  = _Pin;
+	pinGPIO_InitStruct.Pull = _Pull;
+
+	return pinGPIO_InitStruct;
+}
+```
+
+This way we can just send in main.cpp. Next an example of input/output usisng class member.
+
+```cpp
+int main (){
+GPIO_InitTypeDef myGPIO_InitStruct;
+	myGPIO_InitStruct = __gpio_pin_params(GPIO_PIN_5, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL);
+
+	// Class object: Constructor function (PORTx,
+	GPIO LD2(PORTA, GPIOA, &myGPIO_InitStruct);
+
+	// To read B1
+	myGPIO_InitStruct = __gpio_pin_params(GPIO_PIN_13, GPIO_MODE_INPUT, GPIO_NOPULL);
+	GPIO B1 (PORTC, GPIOC, &myGPIO_InitStruct);
+	uint8_t btnState;
+
+	while(1){
+
+		// B1 is active low on NUCLEO board
+		btnState = B1.LIB_GPIO_ReadPin(GPIOC, GPIO_PIN_13);
+		if (btnState == 0){
+			for (int i; i<=900000;i++);
+			LD2.LIB_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
+		}
+	}
+```
+
+## uart
