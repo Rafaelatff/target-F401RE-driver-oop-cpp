@@ -193,3 +193,26 @@ GPIO_InitTypeDef myGPIO_InitStruct;
 ```
 
 ## uart
+
+For the uart, we added the class UARTComm
+
+```cpp
+class UARTComm{
+	private:
+		UART_ComType   			comtype;
+		UART_BaudrateType 		baudrate;
+	
+	public:
+		 UARTComm(UART_ComType _comtype, UART_BaudrateType _baudrate);
+		 void LIB_UART_Write(int ch);
+		 char LIB_UART_Read()const;
+		 UART_ComType getCommType()const;
+		 UART_BaudrateType getBaudrate()const;
+};
+```
+
+Results:
+
+![image](https://user-images.githubusercontent.com/58916022/212558899-82b981bf-b3b1-4b30-9584-9c6ee15fdc1b.png)
+
+## Systick
